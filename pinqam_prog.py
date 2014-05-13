@@ -158,16 +158,16 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.progressBar.setMaximum(bilderzahl)
 
         #Zaehlervariable definieren
-        i=1
+        i = 1
 
         #Time Lapse - Schleife
-        while bilderzahl>0:
-            bilderzahl -=1
+        while bilderzahl > 0:
+            bilderzahl -= 1
             command = 'raspistill -t 300 -o /home/'+getpass.getuser()+'/Desktop/PinQam/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
             os.system(command % (i))
             self.progressBar.setValue(i)
-            time.sleep(zeiteinheit/1000)
-            i+=1
+            time.sleep(zeiteinheit / 1000)
+            i += 1
 
     def activateCam(self):
         global activate 
