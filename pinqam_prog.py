@@ -7,20 +7,29 @@ import sys
 import os
 import getpass
 import time
+import threading
+
+
+#Variablen
+activate = False
+directory = '/home/'+getpass.getuser()+'/Desktop/PinQam'
 
 #Ordner anlegen
 if not os.path.exists('/home/'+getpass.getuser()+'/Desktop/PinQam/'):
     command = 'mkdir /home/$USER/Desktop/PinQam/'
     os.system(command)
-
-#Zeitraffer - Ordner anlegen
-if not os.path.exists('/home/'+getpass.getuser()+'/Desktop/PinQam/Zeitraffer'):
-    command = 'mkdir /home/$USER/Desktop/PinQam/Zeitraffer'
+    
+if not os.path.exists(directory+'/Zeitraffer'):
+    command = 'mkdir '+directory+'/Zeitraffer'
     os.system(command)
 
-#Variablen
-activate = False
+if not os.path.exists(directory+'/Liveview'):
+    command = 'mkdir '+directory+'/Liveview'
+    os.system(command)
 
+if not os.path.exists(directory+'/Webcam'):
+    command = 'mkdir '+directory+'/Webcam'
+    os.system(command)
 
 class MainWindow(QtGui.QDialog, Dlg):
     
@@ -43,6 +52,10 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.connect(self.btnCamOn, QtCore.SIGNAL("clicked()"), self.activateCam)
         self.connect(self.btnCamOff, QtCore.SIGNAL("clicked()"), self.deactivateCam)
 
+        self.connect(self.actionSpeicherort, QtCore.SIGNAL("triggered()"), self.saveDirectory)
+
+        
+
         #Timer fuer Webcam
         self.timer = QTimer()
         self.connect(self.timer, QtCore.SIGNAL("timeout()"), self.Webcam)
@@ -52,7 +65,7 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.progressBar.setValue(0)
 
         #ComboBox Presets fuellen
-        presets = ['antishake', 'automatisch', 'Feuerwerk', 'heller Hintergrund', 'Langzeitbelichtung',
+        presets= ['antishake', 'automatisch', 'Feuerwerk', 'heller Hintergrund', 'Langzeitbelichtung',
                   'Nachtaufnahme', 'Schnee', 'Sport', 'Strand']        
         self.boxPresets.addItems(presets)
         
@@ -95,27 +108,27 @@ class MainWindow(QtGui.QDialog, Dlg):
         saturation  = self.boxSaturation.value()
         iso         = self.boxIso.value()
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -w 256 -h 192 -o /home/'+getpass.getuser()+'/Desktop/PinQam/liveview.jpg -n'
+        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -w 256 -h 192 -o '+directory+'/Liveview/liveview.jpg -n'
         os.system(command % (sharpness, contrast, brightness, saturation, iso))
         
         #Foto im Liveview anzeigen
-        self.labLive.setPixmap(QtGui.QPixmap('/home/'+getpass.getuser()+'/Desktop/PinQam/liveview.jpg'))
+        self.labLive.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview.jpg'))
 
     def aktualisieren_timelapse(self):
-        command = 'raspistill -t 300 -w 256 -h 192 -o /home/'+getpass.getuser()+'/Desktop/PinQam/liveview_timelapse.jpg -n'
+        command = 'raspistill -t 300 -w 256 -h 192 -o '+directory+'/Liveview/liveview_timelapse.jpg -n'
         os.system(command)
 
         #Foto im Liveview anzeigen            
-        self.labLive_2.setPixmap(QtGui.QPixmap('/home/'+getpass.getuser()+'/Desktop/PinQam/liveview_timelapse.jpg'))
+        self.labLive_2.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_timelapse.jpg'))
 
     def aktualisieren_presets(self):
         preset = self.getPreset()
         preset = str(preset)
-        command = 'raspistill -t 300 -w 256 -h 192 -ex '+preset+' -o /home/'+getpass.getuser()+'/Desktop/PinQam/liveview_presets.jpg -n'
+        command = 'raspistill -t 300 -w 256 -h 192 -ex '+preset+' -o '+directory+'/Liveview/liveview_presets.jpg -n'
         os.system(command)
 
         #Foto im Liveview anzeigen            
-        self.labLive_3.setPixmap(QtGui.QPixmap('/home/'+getpass.getuser()+'/Desktop/PinQam/liveview_presets.jpg'))
+        self.labLive_3.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_presets.jpg'))
 
     def takePicture(self):
         #Werte einlesen
@@ -125,13 +138,13 @@ class MainWindow(QtGui.QDialog, Dlg):
         saturation  = self.boxSaturation.value()
         iso = self.boxIso.value()
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -o /home/'+getpass.getuser()+'/Desktop/PinQam/Foto.jpg -n'
+        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -o '+directory+'/Foto.jpg -n'
         os.system(command % (sharpness, contrast, brightness, saturation, iso))
 
     def takePicture_presets(self):
         preset = self.getPreset()
         preset = str(preset)           
-        os.system('raspistill -t 300 -ex '+preset+' -o /home/'+getpass.getuser()+'/Desktop/PinQam/Foto_preset.jpg -n')
+        os.system('raspistill -t 300 -ex '+preset+' -o '+directory+'/Foto_preset.jpg -n')
         
 
     def Start(self):
@@ -158,16 +171,16 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.progressBar.setMaximum(bilderzahl)
 
         #Zaehlervariable definieren
-        i = 1
+        i=1
 
-        #Time Lapse - Schleife
-        while bilderzahl > 0:
-            bilderzahl -= 1
-            command = 'raspistill -t 300 -o /home/'+getpass.getuser()+'/Desktop/PinQam/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
+        #Timelapse - Schleife
+        while bilderzahl>0:
+            bilderzahl -=1
+            command = 'raspistill -t 300 -o '+directory+'/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
             os.system(command % (i))
             self.progressBar.setValue(i)
-            time.sleep(zeiteinheit / 1000)
-            i += 1
+            time.sleep(zeiteinheit/1000)
+            i+=1
 
     def activateCam(self):
         global activate 
@@ -181,16 +194,35 @@ class MainWindow(QtGui.QDialog, Dlg):
     
     def Webcam(self):
         if activate == True:
-            command = 'raspistill -t 300 -w 256 -h 192 -ex auto -o /home/'+getpass.getuser()+'/Desktop/PinQam/liveview_webcam.jpg -n'
+            command = 'raspistill -t 300 -w 256 -h 192 -ex auto -o '+directory+'/Webcam/liveview_webcam.jpg -n'
             os.system(command)
             
             #Zeitstempel
             self.labTime.setText(time.asctime())
 
             #Foto anzeigen
-            self.labLive_4.setPixmap(QtGui.QPixmap('/home/'+getpass.getuser()+'/Desktop/PinQam/liveview_webcam.jpg'))
+            self.labLive_4.setPixmap(QtGui.QPixmap(directory+'/Webcam/liveview_webcam.jpg'))
 
 
+    def saveDirectory(self):
+        global directory
+        directory = QtGui.QFileDialog.getExistingDirectory(self, "Speichern", "", )
+        directory = str(directory)
+
+        #Ordner anlegen
+        if not os.path.exists(directory+'/Zeitraffer'):
+            command = 'mkdir '+directory+'/Zeitraffer'
+            os.system(command)
+
+        if not os.path.exists(directory+'/Liveview'):
+            command = 'mkdir '+directory+'/Liveview'
+            os.system(command)
+
+        if not os.path.exists(directory+'/Webcam'):
+            command = 'mkdir '+directory+'/Webcam'
+            os.system(command)
+
+        return directory
         
     def clear(self):
         self.boxSharpness.setValue(0)
