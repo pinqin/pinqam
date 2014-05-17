@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_pinqam.ui'
 #
-# Created: Sat May 10 20:29:32 2014
+# Created: Sat May 17 14:14:27 2014
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,11 +17,11 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(571, 352)
+        MainWindow.resize(571, 391)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 551, 331))
+        self.tabWidget.setGeometry(QtCore.QRect(10, 30, 551, 331))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
@@ -243,7 +243,17 @@ class Ui_MainWindow(object):
         self.btnCamOff.setGeometry(QtCore.QRect(140, 230, 83, 24))
         self.btnCamOff.setObjectName(_fromUtf8("btnCamOff"))
         self.tabWidget.addTab(self.tab_4, _fromUtf8(""))
-
+       
+        self.menuBar = QtGui.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 571, 19))
+        self.menuBar.setObjectName(_fromUtf8("menuBar"))
+        self.menuEinstellungen = QtGui.QMenu(self.menuBar)
+        self.menuEinstellungen.setObjectName(_fromUtf8("menuEinstellungen"))
+  
+        self.actionSpeicherort = QtGui.QAction(MainWindow)
+        self.actionSpeicherort.setObjectName(_fromUtf8("actionSpeicherort"))
+        self.menuEinstellungen.addAction(self.actionSpeicherort)
+        self.menuBar.addAction(self.menuEinstellungen.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -292,4 +302,6 @@ class Ui_MainWindow(object):
         self.btnClose_4.setText(QtGui.QApplication.translate("MainWindow", "Schliesen", None, QtGui.QApplication.UnicodeUTF8))
         self.btnCamOff.setText(QtGui.QApplication.translate("MainWindow", "Ausschalten", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_4), QtGui.QApplication.translate("MainWindow", "Webcam", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuEinstellungen.setTitle(QtGui.QApplication.translate("MainWindow", "Einstellungen", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionSpeicherort.setText(QtGui.QApplication.translate("MainWindow", "Speicherort auswählen", None, QtGui.QApplication.UnicodeUTF8))
 
