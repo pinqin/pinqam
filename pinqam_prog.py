@@ -173,7 +173,7 @@ class MainWindow(QtGui.QDialog, Dlg):
         #Zaehlervariable definieren
         i=1
 
-        #Timelapse - Schleife
+        #Time Lapse - Schleife
         while bilderzahl>0:
             bilderzahl -=1
             command = 'raspistill -t 300 -o '+directory+'/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
@@ -206,8 +206,12 @@ class MainWindow(QtGui.QDialog, Dlg):
 
     def saveDirectory(self):
         global directory
-        directory = QtGui.QFileDialog.getExistingDirectory(self, "Speichern", "", )
-        directory = str(directory)
+        
+        temp = QtGui.QFileDialog.getExistingDirectory(self, "Speicherort waehlen", "", )
+        
+        if not temp == "":
+            directory = temp
+            directory = str(directory)
 
         #Ordner anlegen
         if not os.path.exists(directory+'/Zeitraffer'):
