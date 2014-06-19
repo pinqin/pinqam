@@ -14,6 +14,7 @@ from PyQt4.QtGui import QMessageBox
 #Variablen
 activate = False
 directory = '/home/'+getpass.getuser()+'/Desktop/PinQam'
+rotation = 0
 i = 0
 
 #Ordner anlegen
@@ -70,6 +71,10 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.connect(self.btnCamOff, QtCore.SIGNAL("clicked()"), self.deactivateCam)
 
         self.connect(self.actionSpeicherort, QtCore.SIGNAL("triggered()"), self.saveDirectory)
+        self.connect(self.action0, QtCore.SIGNAL("triggered()"), self.rotate_0)
+        self.connect(self.action_91, QtCore.SIGNAL("triggered()"), self.rotate_90)
+        self.connect(self.action_180, QtCore.SIGNAL("triggered()"), self.rotate_180)
+        self.connect(self.action_270, QtCore.SIGNAL("triggered()"), self.rotate_270)
   
 
         #Timer fuer Webcam
@@ -92,6 +97,32 @@ class MainWindow(QtGui.QDialog, Dlg):
                   'colourswap', 'washedout', 'posterise', 'colourpoint', 'colourbalance', 'cartoon']
 
         self.boxEffects.addItems(filters)
+
+    #Rotation
+    def rotate_0(self):
+        global rotation
+
+        rotation = 0
+        return rotation
+
+    def rotate_90(self):
+        global rotation
+
+        rotation = 90
+        return rotation
+
+    def rotate_180(self):
+        global rotation
+
+        rotation = 180
+        return rotation
+
+    def rotate_270(self):
+        global rotation
+
+        rotation = 270
+        return rotation
+
 
         
     #Motivprogrammauswahl abrufen und uebersetzen
@@ -133,15 +164,15 @@ class MainWindow(QtGui.QDialog, Dlg):
         saturation  = self.boxSaturation.value()
         iso         = self.boxIso.value()
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -w 256 -h 192 -o '+directory+'/Liveview/liveview.jpg -n'
-        os.system(command % (sharpness, contrast, brightness, saturation, iso))
+        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview.jpg -n'
+        os.system(command % (sharpness, contrast, brightness, saturation, iso, rotation))
         
         #Foto im Liveview anzeigen
         self.labLive.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview.jpg'))
 
     def aktualisieren_timelapse(self):
-        command = 'raspistill -t 300 -w 256 -h 192 -o '+directory+'/Liveview/liveview_timelapse.jpg -n'
-        os.system(command)
+        command = 'raspistill -t 300 -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview_timelapse.jpg -n'
+        os.system(command %(rotation))
 
         #Foto im Liveview anzeigen            
         self.labLive_2.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_timelapse.jpg'))
@@ -149,8 +180,8 @@ class MainWindow(QtGui.QDialog, Dlg):
     def aktualisieren_presets(self):
         preset = self.getPreset()
         preset = str(preset)
-        command = 'raspistill -t 300 -w 256 -h 192 -ex '+preset+' -o '+directory+'/Liveview/liveview_presets.jpg -n'
-        os.system(command)
+        command = 'raspistill -t 300 -w 256 -h 192 -ex '+preset+' -rot %i -o '+directory+'/Liveview/liveview_presets.jpg -n'
+        os.system(command % (rotation))
 
         #Foto im Liveview anzeigen            
         self.labLive_3.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_presets.jpg'))
@@ -159,15 +190,15 @@ class MainWindow(QtGui.QDialog, Dlg):
         effect = self.boxEffects.currentText()
         effect = str(effect)
         
-        command = 'raspistill -t 300 -w 256 -h 192 -ifx %s -o '+directory+'/Liveview/liveview_effect.jpg -n'
-        os.system(command % (effect))
+        command = 'raspistill -t 300 -w 256 -h 192 -ifx %s -rot %i -o '+directory+'/Liveview/liveview_effect.jpg -n'
+        os.system(command % (effect, rotation))
 
         #Foto im Liveview anzeigen            
         self.labLive_5.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_effect.jpg'))
 
     def aktualisieren_video(self):
-        command = 'raspistill -t 300 -w 256 -h 192 -o '+directory+'/Liveview/liveview_video.jpg -n'
-        os.system(command)
+        command = 'raspistill -t 300 -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview_video.jpg -n'
+        os.system(command % (rotation))
 
         #Foto im Liveview anzeigen            
         self.labLive_6.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_video.jpg'))
@@ -186,13 +217,14 @@ class MainWindow(QtGui.QDialog, Dlg):
         date = date.replace(' ', '_')
         date = date.replace(':', '_')
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -o '+directory+'/Foto_%s.jpg -n'
-        os.system(command % (sharpness, contrast, brightness, saturation, iso, date))
+        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -rot %i -o '+directory+'/Foto_%s.jpg -n'
+        os.system(command % (sharpness, contrast, brightness, saturation, iso, rotation, date))
 
     def takePicture_presets(self):
         preset = self.getPreset()
         preset = str(preset)           
-        os.system('raspistill -t 300 -ex '+preset+' -o '+directory+'/Foto_preset.jpg -n')
+        command = 'raspistill -t 300 -ex '+preset+' -rot %i -o '+directory+'/Foto_preset.jpg -n'
+        os.system(command % (rotation))
 
     def takePicture_filter(self):
         date = time.asctime()
@@ -202,8 +234,8 @@ class MainWindow(QtGui.QDialog, Dlg):
         effect = self.boxEffects.currentText()
         effect = str(effect)
         
-        command = 'raspistill -t 300 -ifx %s -o '+directory+'/Filtereffekte/Foto_%s_%s.jpg -n'
-        os.system(command % (effect, date, effect))
+        command = 'raspistill -t 300 -ifx %s -rot %i -o '+directory+'/Filtereffekte/Foto_%s_%s.jpg -n'
+        os.system(command % (effect, rotation, date, effect))
 
 
     def Start(self):
@@ -235,8 +267,8 @@ class MainWindow(QtGui.QDialog, Dlg):
         #Time Lapse - Schleife
         while bilderzahl>0:
             bilderzahl -=1
-            command = 'raspistill -t 300 -o '+directory+'/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
-            os.system(command % (i))
+            command = 'raspistill -t 300 -rot %i -o '+directory+'/Zeitraffer/Zeitraffer%i.jpg.jpg -n &'
+            os.system(command % (rotation, i))
             self.progressBar.setValue(i)
             time.sleep(zeiteinheit/1000)
             i+=1
@@ -278,8 +310,8 @@ class MainWindow(QtGui.QDialog, Dlg):
             date = date.replace(' ', '_')
             date = date.replace(':', '_')
             
-            command = 'raspivid -w %s -h %s -b %s -t %s -fps %s -o '+directory+'/Video/Video_%s.h264'
-            os.system(command % (width, height, rate, duration, fps, date))
+            command = 'raspivid -w %s -h %s -b %s -t %s -fps %s -rot %i -o '+directory+'/Video/Video_%s.h264'
+            os.system(command % (width, height, rate, duration, fps, rotation, date))
         
 
     def activateCam(self):
@@ -294,8 +326,8 @@ class MainWindow(QtGui.QDialog, Dlg):
     
     def Webcam(self):
         if activate == True:
-            command = 'raspistill -t 300 -w 256 -h 192 -ex auto -o '+directory+'/Webcam/liveview_webcam.jpg -n'
-            os.system(command)
+            command = 'raspistill -t 300 -w 256 -h 192 -ex auto -rot %i -o '+directory+'/Webcam/liveview_webcam.jpg -n'
+            os.system(command % (rotation))
             
             #Zeitstempel
             self.labTime.setText(time.asctime())
