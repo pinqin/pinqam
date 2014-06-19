@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_pinqam.ui'
 #
-# Created: Tue Jun 17 19:50:50 2014
+# Created: Thu Jun 19 18:20:20 2014
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -317,16 +317,33 @@ class Ui_MainWindow(object):
         self.btnClose_6.setGeometry(QtCore.QRect(120, 270, 83, 24))
         self.btnClose_6.setObjectName(_fromUtf8("btnClose_6"))
         self.tabWidget.addTab(self.tab_5, _fromUtf8(""))
- 
+
         self.menuBar = QtGui.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 571, 19))
         self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuEinstellungen = QtGui.QMenu(self.menuBar)
         self.menuEinstellungen.setObjectName(_fromUtf8("menuEinstellungen"))
+        self.menuKamerabild_drehen_2 = QtGui.QMenu(self.menuEinstellungen)
+        self.menuKamerabild_drehen_2.setObjectName(_fromUtf8("menuKamerabild_drehen_2"))
 
         self.actionSpeicherort = QtGui.QAction(MainWindow)
         self.actionSpeicherort.setObjectName(_fromUtf8("actionSpeicherort"))
+        self.action_90 = QtGui.QAction(MainWindow)
+        self.action_90.setObjectName(_fromUtf8("action_90"))
+        self.action_270 = QtGui.QAction(MainWindow)
+        self.action_270.setObjectName(_fromUtf8("action_270"))
+        self.action_180 = QtGui.QAction(MainWindow)
+        self.action_180.setObjectName(_fromUtf8("action_180"))
+        self.action_91 = QtGui.QAction(MainWindow)
+        self.action_91.setObjectName(_fromUtf8("action_91"))
+        self.action0 = QtGui.QAction(MainWindow)
+        self.action0.setObjectName(_fromUtf8("action0"))
+        self.menuKamerabild_drehen_2.addAction(self.action0)
+        self.menuKamerabild_drehen_2.addAction(self.action_91)
+        self.menuKamerabild_drehen_2.addAction(self.action_180)
+        self.menuKamerabild_drehen_2.addAction(self.action_270)
         self.menuEinstellungen.addAction(self.actionSpeicherort)
+        self.menuEinstellungen.addAction(self.menuKamerabild_drehen_2.menuAction())
         self.menuBar.addAction(self.menuEinstellungen.menuAction())
 
         self.retranslateUi(MainWindow)
@@ -397,5 +414,11 @@ class Ui_MainWindow(object):
         self.btnClose_6.setText(QtGui.QApplication.translate("MainWindow", "Schliesen", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_5), QtGui.QApplication.translate("MainWindow", "Video", None, QtGui.QApplication.UnicodeUTF8))
         self.menuEinstellungen.setTitle(QtGui.QApplication.translate("MainWindow", "Einstellungen", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuKamerabild_drehen_2.setTitle(QtGui.QApplication.translate("MainWindow", "Kamerabild drehen", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSpeicherort.setText(QtGui.QApplication.translate("MainWindow", "Speicherort auswählen", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_90.setText(QtGui.QApplication.translate("MainWindow", "+90°", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_270.setText(QtGui.QApplication.translate("MainWindow", "+270°", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_180.setText(QtGui.QApplication.translate("MainWindow", "+180°", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_91.setText(QtGui.QApplication.translate("MainWindow", "+90°", None, QtGui.QApplication.UnicodeUTF8))
+        self.action0.setText(QtGui.QApplication.translate("MainWindow", "0°", None, QtGui.QApplication.UnicodeUTF8))
 
