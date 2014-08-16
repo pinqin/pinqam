@@ -2,20 +2,26 @@
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QObject, QTimer
-from gui_pinqam import Ui_MainWindow as Dlg
+from gui_pinqam_picamera import Ui_MainWindow as Dlg
 import sys
 import os
 import getpass
 import time
 import threading
+import picamera
 from PyQt4.QtGui import QMessageBox
 
 
 #Variablen
 activate = False
+led_ = True
+wb = 'auto'
 directory = '/home/'+getpass.getuser()+'/Desktop/PinQam'
 rotation = 0
 i = 0
+height = 720
+width = 250
+
 
 #Ordner anlegen
 if not os.path.exists('/home/'+getpass.getuser()+'/Desktop/PinQam/'):
@@ -65,16 +71,29 @@ class MainWindow(QtGui.QDialog, Dlg):
         self.connect(self.btnClose_4, QtCore.SIGNAL("clicked()"), self.close)
         self.connect(self.btnClose_5, QtCore.SIGNAL("clicked()"), self.close)
         self.connect(self.btnClose_6, QtCore.SIGNAL("clicked()"), self.close)
+
         self.connect(self.btnStart, QtCore.SIGNAL("clicked()"), self.Start)
-        self.connect(self.btnStart_2, QtCore.SIGNAL("clicked()"), self.StartVideo)
+        self.connect(self.btnStart_2, QtCore.SIGNAL("clicked()"), self.startVideo)     
         self.connect(self.btnCamOn, QtCore.SIGNAL("clicked()"), self.activateCam)
         self.connect(self.btnCamOff, QtCore.SIGNAL("clicked()"), self.deactivateCam)
 
+        #MenuBar
         self.connect(self.actionSpeicherort, QtCore.SIGNAL("triggered()"), self.saveDirectory)
         self.connect(self.action0, QtCore.SIGNAL("triggered()"), self.rotate_0)
         self.connect(self.action_91, QtCore.SIGNAL("triggered()"), self.rotate_90)
         self.connect(self.action_180, QtCore.SIGNAL("triggered()"), self.rotate_180)
         self.connect(self.action_270, QtCore.SIGNAL("triggered()"), self.rotate_270)
+        self.connect(self.actionAktiviert, QtCore.SIGNAL("triggered()"), self.ledActivate)
+        self.connect(self.actionDeaktiviert, QtCore.SIGNAL("triggered()"), self.ledDeactivate)
+        
+        self.connect(self.actionOff, QtCore.SIGNAL("triggered()"), self.setWB_off)
+        self.connect(self.actionAuto, QtCore.SIGNAL("triggered()"), self.setWB_auto)
+        self.connect(self.actionSunlight, QtCore.SIGNAL("triggered()"), self.setWB_sunlight)
+        self.connect(self.actionCloudy, QtCore.SIGNAL("triggered()"), self.setWB_cloudy)
+        self.connect(self.actionShade, QtCore.SIGNAL("triggered()"), self.setWB_shade)
+        self.connect(self.actionTungsten, QtCore.SIGNAL("triggered()"), self.setWB_tungsten)
+        self.connect(self.actionIncandescent, QtCore.SIGNAL("triggered()"), self.setWB_incandescent)
+        self.connect(self.actionFlash, QtCore.SIGNAL("triggered()"), self.setWB_flash)
   
 
         #Timer fuer Webcam
@@ -98,6 +117,24 @@ class MainWindow(QtGui.QDialog, Dlg):
 
         self.boxEffects.addItems(filters)
 
+        
+#Settings
+    
+    #LED-activate
+    def ledActivate(self):
+        global led_
+        led_ = True
+
+        return led_
+
+
+    #LED-activate
+    def ledDeactivate(self):
+        global led_
+        led_ = False
+
+        return led_
+        
     #Rotation
     def rotate_0(self):
         global rotation
@@ -122,7 +159,39 @@ class MainWindow(QtGui.QDialog, Dlg):
 
         rotation = 270
         return rotation
+    
+    #Weissabgleich
+    def setWB_off(self):
+        global wb
+        wb = 'off'
 
+    def setWB_auto(self):
+        global wb
+        wb = 'auto'
+
+    def setWB_sunlight(self):
+        global wb
+        wb = 'sunlight'
+
+    def setWB_cloudy(self):
+        global wb
+        wb = 'cloudy'
+
+    def setWB_shade(self):
+        global wb
+        wb = 'shade'
+
+    def setWB_tungsten(self):
+        global wb
+        wb = 'tungsten'
+
+    def setWB_incandescent(self):
+        global wb
+        wb = 'incandescent'
+
+    def setWB_flash(self):
+        global wb
+        wb = 'flash'
 
         
     #Motivprogrammauswahl abrufen und uebersetzen
@@ -164,15 +233,31 @@ class MainWindow(QtGui.QDialog, Dlg):
         saturation  = self.boxSaturation.value()
         iso         = self.boxIso.value()
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview.jpg -n'
-        os.system(command % (sharpness, contrast, brightness, saturation, iso, rotation))
+
+        with picamera.PiCamera() as camera:
+            camera.sharpness = (sharpness)
+            camera.contast = (contrast)
+            camera.brightness = (brightness)
+            camera.saturation = (saturation)
+            camera.iso = (iso)
+            camera.rotation = (rotation)
+            camera.resolution = (256, 192)
+            #camera.led = (led_)
+
+            camera.capture(directory+'/Liveview/liveview.jpg')
         
         #Foto im Liveview anzeigen
         self.labLive.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview.jpg'))
 
+
+
     def aktualisieren_timelapse(self):
-        command = 'raspistill -t 300 -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview_timelapse.jpg -n'
-        os.system(command %(rotation))
+        with picamera.PiCamera() as camera:
+            camera.rotation = (rotation)
+            camera.resolution = (256, 192)
+            #camera.led = (led_)
+
+            camera.capture(directory+'/Liveview/liveview_timelapse.jpg')
 
         #Foto im Liveview anzeigen            
         self.labLive_2.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_timelapse.jpg'))
@@ -189,16 +274,27 @@ class MainWindow(QtGui.QDialog, Dlg):
     def aktualisieren_filters(self):
         effect = self.boxEffects.currentText()
         effect = str(effect)
-        
-        command = 'raspistill -t 300 -w 256 -h 192 -ifx %s -rot %i -o '+directory+'/Liveview/liveview_effect.jpg -n'
-        os.system(command % (effect, rotation))
+
+        with picamera.PiCamera() as camera:
+            camera.rotation = (rotation)
+            camera.resolution = (256, 192)
+            camera.image_effect = (effect)
+            camera.awb_mode = (wb)
+            #camera.led = (led_)
+
+            camera.capture(directory+'/Liveview/liveview_effect.jpg')
 
         #Foto im Liveview anzeigen            
         self.labLive_5.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_effect.jpg'))
 
     def aktualisieren_video(self):
-        command = 'raspistill -t 300 -w 256 -h 192 -rot %i -o '+directory+'/Liveview/liveview_video.jpg -n'
-        os.system(command % (rotation))
+        with picamera.PiCamera() as camera:
+            camera.rotation = (rotation)
+            camera.resolution = (256, 192)
+            camera.awb_mode = (wb)
+            #camera.led = (led_)
+
+            camera.capture(directory+'/Liveview/liveview_video.jpg')
 
         #Foto im Liveview anzeigen            
         self.labLive_6.setPixmap(QtGui.QPixmap(directory+'/Liveview/liveview_video.jpg'))
@@ -217,14 +313,27 @@ class MainWindow(QtGui.QDialog, Dlg):
         date = date.replace(' ', '_')
         date = date.replace(':', '_')
 
-        command = 'raspistill -t 300 -sh %i -co %i -br %i -sa %i -ISO %i -rot %i -o '+directory+'/Foto_%s.jpg -n'
-        os.system(command % (sharpness, contrast, brightness, saturation, iso, rotation, date))
+
+        with picamera.PiCamera() as camera:
+            camera.sharpness = (sharpness)
+            camera.contast = (contrast)
+            camera.brightness = (brightness)
+            camera.saturation = (saturation)
+            camera.iso = (iso)
+            camera.rotation = (rotation)
+            camera.awb_mode = (wb)
+            #camera.led = (led_)
+
+            file = directory+'/Foto_%s.jpg'
+            camera.capture(file % (date))
+
 
     def takePicture_presets(self):
         preset = self.getPreset()
         preset = str(preset)           
         command = 'raspistill -t 300 -ex '+preset+' -rot %i -o '+directory+'/Foto_preset.jpg -n'
         os.system(command % (rotation))
+
 
     def takePicture_filter(self):
         date = time.asctime()
@@ -234,8 +343,13 @@ class MainWindow(QtGui.QDialog, Dlg):
         effect = self.boxEffects.currentText()
         effect = str(effect)
         
-        command = 'raspistill -t 300 -ifx %s -rot %i -o '+directory+'/Filtereffekte/Foto_%s_%s.jpg -n'
-        os.system(command % (effect, rotation, date, effect))
+        with picamera.PiCamera() as camera:
+            camera.image_effect = (effect)
+            camera.rotation = (rotation)
+            camera.awb_mode = (wb)
+
+            file = directory+'/Filtereffekte/Foto_filter_%s.jpg'
+            camera.capture(file % (date))
 
 
     def Start(self):
@@ -273,47 +387,40 @@ class MainWindow(QtGui.QDialog, Dlg):
             time.sleep(zeiteinheit/1000)
             i+=1
 
-    def StartVideo(self):
-        width  = self.lineWidth.text()
-        height = self.lineHeight.text()
-        fps    = self.lineFps.text()
-        
-        duration = self.lineTime.text() 
-        duration = int(duration)
-        duration = duration * 1000
-        duration = str(duration)
-        
-        rate   = self.lineRate.text()
-        rate   = int(rate)
-        rate   = rate * 1000000
-        rate   = str(rate)
+    def startVideo(self):
+        width  = int(self.lineWidth.text())
+        height = int(self.lineHeight.text())
+        duration = int(self.lineDuration.text())
 
         #Input-Ueberpruefung
-        if (int(width) < 64) or (int(width) > 1920):
+        if (width < 64) or (width > 1920):
             self.msgBox1 = QMessageBox()
             self.msgBox1.setText("Wert fuer Breite ueberpruefen")            
             self.msgBox1.exec_()
 
-        elif (int(height) < 64) or (int(height) >1080):
+        elif (height < 64) or (height >1080):
             self.msgBox2 = QMessageBox()
             self.msgBox2.setText("Wert fuer Hoehe ueberpruefen")            
-            self.msgBox2.exec_()
+            self.msgBox2.exec_() 
+         
+        date = time.asctime()
+        date = date.replace(' ', '_')
+        date = date.replace(':', '_')
 
-
-        elif (int(fps) < 2) or (int(fps) >30):
-            self.msgBox3 = QMessageBox()
-            self.msgBox3.setText("Wert fuer FPS ueberpruefen")            
-            self.msgBox3.exec_()
-
-        else:            
-            date = time.asctime()
-            date = date.replace(' ', '_')
-            date = date.replace(':', '_')
+        if self.radioMjpeg.isChecked():
+            format_ = 'mjpeg'
             
-            command = 'raspivid -w %s -h %s -b %s -t %s -fps %s -rot %i -o '+directory+'/Video/Video_%s.h264'
-            os.system(command % (width, height, rate, duration, fps, rotation, date))
+        elif self.radioH264.isChecked():
+            format_ = 'h264'
+  
         
+        with picamera.PiCamera() as camera:
+            camera.resolution = (width, height)
+            camera.start_recording(directory+'/Video/video_'+date+'.'+format_, format = None)
+            camera.wait_recording(duration)
+            camera.stop_recording()
 
+        
     def activateCam(self):
         global activate 
         activate = True
@@ -326,9 +433,14 @@ class MainWindow(QtGui.QDialog, Dlg):
     
     def Webcam(self):
         if activate == True:
-            command = 'raspistill -t 300 -w 256 -h 192 -ex auto -rot %i -o '+directory+'/Webcam/liveview_webcam.jpg -n'
-            os.system(command % (rotation))
-            
+            with picamera.PiCamera() as camera:
+                camera.rotation = (rotation)
+                camera.resolution = (256, 192)
+                camera.awb_mode = (wb)
+                #camera.led = (led_)
+
+                camera.capture(directory+'/Webcam/liveview_webcam.jpg')
+
             #Zeitstempel
             self.labTime.setText(time.asctime())
 
@@ -367,6 +479,7 @@ class MainWindow(QtGui.QDialog, Dlg):
             os.system(command)
 
         return directory
+
         
     def clear(self):
         self.boxSharpness.setValue(0)
