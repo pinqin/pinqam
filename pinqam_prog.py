@@ -403,6 +403,13 @@ class MainWindow(QtGui.QDialog, Dlg):
             self.msgBox2.setText("Wert fuer Hoehe ueberpruefen")            
             self.msgBox2.exec_() 
          
+         #Videostabilisator
+         if self.radio_stabOn.isChecked()
+            video_stabilization = True
+            
+        elif self.radio_stabOff.isChecked()
+            video_stabilization = False
+         
         date = time.asctime()
         date = date.replace(' ', '_')
         date = date.replace(':', '_')
