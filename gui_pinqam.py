@@ -346,7 +346,6 @@ class Ui_MainWindow(object):
         self.menuLED.setObjectName(_fromUtf8("menuLED"))
         self.menuWeis_abgleich = QtGui.QMenu(self.menuEinstellungen)
         self.menuWeis_abgleich.setObjectName(_fromUtf8("menuWeis_abgleich"))
-        MainWindow.setMenuBar(self.menuBar)
         self.actionSpeicherort = QtGui.QAction(MainWindow)
         self.actionSpeicherort.setObjectName(_fromUtf8("actionSpeicherort"))
         self.action_90 = QtGui.QAction(MainWindow)
