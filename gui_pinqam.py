@@ -344,7 +344,6 @@ class Ui_MainWindow(object):
         self.menuKamerabild_drehen_2.setObjectName(_fromUtf8("menuKamerabild_drehen_2"))
         self.menuLED = QtGui.QMenu(self.menuEinstellungen)
         self.menuLED.setObjectName(_fromUtf8("menuLED"))
-        MainWindow.setMenuBar(self.menuBar)
         self.actionSpeicherort = QtGui.QAction(MainWindow)
         self.actionSpeicherort.setObjectName(_fromUtf8("actionSpeicherort"))
         self.action_90 = QtGui.QAction(MainWindow)
