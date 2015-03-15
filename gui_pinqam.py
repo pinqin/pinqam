@@ -335,7 +335,6 @@ class Ui_MainWindow(object):
         self.btnClose_6.setGeometry(QtCore.QRect(450, 270, 83, 24))
         self.btnClose_6.setObjectName(_fromUtf8("btnClose_6"))
         self.tabWidget.addTab(self.tab_5, _fromUtf8(""))
-        self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuEinstellungen = QtGui.QMenu(self.menuBar)
         self.menuEinstellungen.setObjectName(_fromUtf8("menuEinstellungen"))
         self.menuKamerabild_drehen_2 = QtGui.QMenu(self.menuEinstellungen)
