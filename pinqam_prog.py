@@ -2,7 +2,7 @@
 
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtCore import QObject, QTimer
-from gui_pinqam_picamera import Ui_MainWindow as Dlg
+from gui_pinqam import Ui_MainWindow as Dlg
 import sys
 import os
 import getpass
