@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_pinqam.ui'
 #
-# Created: Sun Mar 15 13:42:59 2015
+# Created: Sun Mar 15 15:09:34 2015
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -335,6 +335,10 @@ class Ui_MainWindow(object):
         self.btnClose_6.setGeometry(QtCore.QRect(450, 270, 83, 24))
         self.btnClose_6.setObjectName(_fromUtf8("btnClose_6"))
         self.tabWidget.addTab(self.tab_5, _fromUtf8(""))
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menuBar = QtGui.QMenuBar(MainWindow)
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 574, 19))
+        self.menuBar.setObjectName(_fromUtf8("menuBar"))
         self.menuEinstellungen = QtGui.QMenu(self.menuBar)
         self.menuEinstellungen.setObjectName(_fromUtf8("menuEinstellungen"))
         self.menuKamerabild_drehen_2 = QtGui.QMenu(self.menuEinstellungen)
