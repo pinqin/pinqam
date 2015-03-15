@@ -404,11 +404,11 @@ class MainWindow(QtGui.QDialog, Dlg):
             self.msgBox2.exec_() 
          
          #Videostabilisator
-        if self.radio_stabOn.isChecked()
-            video_stabilization = True
+        if self.radio_stabOn.isChecked():
+            _video_stabilization = True
             
-        elif self.radio_stabOff.isChecked()
-            video_stabilization = False
+        elif self.radio_stabOff.isChecked():
+            _video_stabilization = False
          
         date = time.asctime()
         date = date.replace(' ', '_')
@@ -423,6 +423,7 @@ class MainWindow(QtGui.QDialog, Dlg):
         
         with picamera.PiCamera() as camera:
             camera.resolution = (width, height)
+            camera.video_stabilization = (_video_stabilization)
             camera.start_recording(directory+'/Video/video_'+date+'.'+format_, format = None)
             camera.wait_recording(duration)
             camera.stop_recording()
