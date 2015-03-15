@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui_pinqam.ui'
 #
-# Created: Sun Mar 15 16:01:43 2015
+# Created: Sun Mar 15 16:10:12 2015
 #      by: PyQt4 UI code generator 4.9.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -283,12 +283,6 @@ class Ui_MainWindow(object):
         self.labLive_6.setGeometry(QtCore.QRect(10, 20, 256, 192))
         self.labLive_6.setAlignment(QtCore.Qt.AlignCenter)
         self.labLive_6.setObjectName(_fromUtf8("labLive_6"))
-        self.label_13 = QtGui.QLabel(self.groupBox_11)
-        self.label_13.setGeometry(QtCore.QRect(40, 50, 51, 16))
-        self.label_13.setObjectName(_fromUtf8("label_13"))
-        self.label_14 = QtGui.QLabel(self.groupBox_11)
-        self.label_14.setGeometry(QtCore.QRect(20, 170, 71, 16))
-        self.label_14.setObjectName(_fromUtf8("label_14"))
         self.groupBox_12 = QtGui.QGroupBox(self.tab_5)
         self.groupBox_12.setGeometry(QtCore.QRect(20, 10, 231, 171))
         self.groupBox_12.setObjectName(_fromUtf8("groupBox_12"))
@@ -321,24 +315,24 @@ class Ui_MainWindow(object):
         self.btnClose_6.setGeometry(QtCore.QRect(450, 270, 83, 24))
         self.btnClose_6.setObjectName(_fromUtf8("btnClose_6"))
         self.groupBox_13 = QtGui.QGroupBox(self.tab_5)
-        self.groupBox_13.setGeometry(QtCore.QRect(20, 190, 231, 41))
+        self.groupBox_13.setGeometry(QtCore.QRect(20, 190, 231, 31))
         self.groupBox_13.setObjectName(_fromUtf8("groupBox_13"))
         self.radioH264 = QtGui.QRadioButton(self.groupBox_13)
-        self.radioH264.setGeometry(QtCore.QRect(90, 20, 61, 19))
+        self.radioH264.setGeometry(QtCore.QRect(90, 10, 61, 19))
         self.radioH264.setObjectName(_fromUtf8("radioH264"))
         self.radioMjpeg = QtGui.QRadioButton(self.groupBox_13)
-        self.radioMjpeg.setGeometry(QtCore.QRect(160, 20, 61, 19))
+        self.radioMjpeg.setGeometry(QtCore.QRect(160, 10, 61, 19))
         self.radioMjpeg.setChecked(True)
         self.radioMjpeg.setObjectName(_fromUtf8("radioMjpeg"))
         self.groupBox_14 = QtGui.QGroupBox(self.tab_5)
-        self.groupBox_14.setGeometry(QtCore.QRect(20, 240, 231, 41))
+        self.groupBox_14.setGeometry(QtCore.QRect(20, 230, 231, 31))
         self.groupBox_14.setObjectName(_fromUtf8("groupBox_14"))
         self.radio_stabOff = QtGui.QRadioButton(self.groupBox_14)
-        self.radio_stabOff.setGeometry(QtCore.QRect(160, 20, 41, 19))
+        self.radio_stabOff.setGeometry(QtCore.QRect(160, 10, 41, 19))
         self.radio_stabOff.setChecked(True)
         self.radio_stabOff.setObjectName(_fromUtf8("radio_stabOff"))
         self.radio_stabOn = QtGui.QRadioButton(self.groupBox_14)
-        self.radio_stabOn.setGeometry(QtCore.QRect(90, 20, 41, 19))
+        self.radio_stabOn.setGeometry(QtCore.QRect(90, 10, 41, 19))
         self.radio_stabOn.setObjectName(_fromUtf8("radio_stabOn"))
         self.tabWidget.addTab(self.tab_5, _fromUtf8(""))
         self.menuBar = QtGui.QMenuBar(MainWindow)
@@ -462,8 +456,6 @@ class Ui_MainWindow(object):
         self.groupBox_11.setTitle(QtGui.QApplication.translate("MainWindow", "Live-View", None, QtGui.QApplication.UnicodeUTF8))
         self.btnAkt_5.setText(QtGui.QApplication.translate("MainWindow", "Aktualisieren", None, QtGui.QApplication.UnicodeUTF8))
         self.labLive_6.setText(QtGui.QApplication.translate("MainWindow", "Bitte aktualisieren!", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_13.setText(QtGui.QApplication.translate("MainWindow", "Format", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_14.setText(QtGui.QApplication.translate("MainWindow", "Stabilisator", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_12.setTitle(QtGui.QApplication.translate("MainWindow", "Konfiguration", None, QtGui.QApplication.UnicodeUTF8))
         self.lineHeight.setText(QtGui.QApplication.translate("MainWindow", "1080", None, QtGui.QApplication.UnicodeUTF8))
         self.label_10.setText(QtGui.QApplication.translate("MainWindow", "Breite (min 64px  max 1920px)", None, QtGui.QApplication.UnicodeUTF8))
