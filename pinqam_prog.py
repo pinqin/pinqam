@@ -404,7 +404,7 @@ class MainWindow(QtGui.QDialog, Dlg):
             self.msgBox2.exec_() 
          
          #Videostabilisator
-         if self.radio_stabOn.isChecked()
+        if self.radio_stabOn.isChecked()
             video_stabilization = True
             
         elif self.radio_stabOff.isChecked()
